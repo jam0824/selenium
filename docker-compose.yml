@@ -1,35 +1,32 @@
-selenium-hub:
-  image: selenium/hub
-  container_name: 'selenium-hub'
-  ports:
-    - 4444:4444
-
-chrome:
-  image: selenium/node-chrome-debug
-  container_name: 'chrome'
-  links:
-    - selenium-hub:hub
-  ports:
-    - 5900:5900
-  volumes:
-    - /dev/shm:/dev/shm
-
-#firefox:
-#  image: selenium/node-firefox-debug
-#  container_name: 'firefox'
-#  ports:
-#   - 5910:5900
-#  links:
-#    - selenium-hub:hub
-
-python:
-  build: './python-selenium'
-  container_name: 'python'
-  links:
-    - selenium-hub:hub
-  command: 'tail -f /dev/null'
-  working_dir: '/root/script/'
-  volumes:
-    - ./script/:/root/script/
-  environment:
-    - 'TZ=Asia/Tokyo'
+version: "3.7"
+ 
+services:
+  selenium-hub:
+    image: selenium/hub:latest
+    ports:
+      - 4444:4444
+ 
+  chrome:
+    image: selenium/node-chrome-debug:latest
+    environment:
+      - HUB_PORT_4444_TCP_ADDR=selenium-hub
+      - HUB_PORT_4444_TCP_PORT=4444
+    depends_on:
+      - selenium-hub
+    ports:
+      - 5901:5900
+    deploy:
+      replicas: 4
+ 
+  python:
+    image: python-selenium:v1
+    build:
+      context: ./python-selenium
+    depends_on:
+      - selenium-hub
+    working_dir: '/root/script/'
+    volumes:
+      - ./script/:/root/script/
+    environment:
+      - 'TZ=Asia/Tokyo'
+    tty: true

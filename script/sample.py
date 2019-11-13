@@ -1,9 +1,13 @@
+
 #!/usr/local/bin/python3
 from selenium import webdriver
-#from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from time import sleep
 import datetime
+import threading
+import random
+
+NODE_NUM = 4
 
 def execSearch(browser: webdriver):
     """
@@ -27,24 +31,20 @@ def execSearch(browser: webdriver):
     sleep(1)
 
     # スクリーンショット
-    browser.save_screenshot('images/' + dtstr + '.png')
+    browser.save_screenshot('images/' + dtstr + '_' + str(random.randrange(10000)) + '.png')
 
-
-if __name__ == '__main__':
+def start_webdriver():
     try:
-        #browser = webdriver.Firefox()  # 普通のFilefoxを制御する場合
-        #browser = webdriver.Chrome()   # 普通のChromeを制御する場合
-
-        # HEADLESSブラウザに接続
         browser = webdriver.Remote(
             command_executor='http://selenium-hub:4444/wd/hub',
             desired_capabilities=DesiredCapabilities.CHROME)
-
         # Googleで検索実行
         execSearch(browser)
-
     finally:
-        # 終了
         browser.close()
         browser.quit()
 
+if __name__ == '__main__':
+    for i in range(NODE_NUM):
+        thread = threading.Thread(target=start_webdriver)
+        thread.start()
