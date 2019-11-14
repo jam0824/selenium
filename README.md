@@ -14,25 +14,33 @@ seleniumディレクトリに移動。
 
 初回のみで大丈夫です。
 
+```
  $ docker-compose build
+ ```
 
 ## kubernetes起動
 
 以下を実行
 
+```
 $ docker stack deploy --orchestrator=kubernetes -c docker-compose.yml kube
+```
 
 ## sample.pyの実行
 
 まずは以下を実行
 
+```
 $ kubectl get pods
+```
 
 これでpodのnameがわかるのでpythonのpodのnameをコピーしておく
 
 次に以下を実行
 
+```
 $ kubectl exec -it コピーしたname python /root/script/sample.py
+```
 
 ## 確認
 
@@ -44,5 +52,7 @@ macであれば画面共有から確認できる。
 
 以下を入力
 
+```
 $ docker stack rm --orchestrator=kubernetes kube
+```
 
