@@ -1,4 +1,9 @@
 # 忙しい人向け使い方
+詳細は以下のページで説明
+
+http://testerchan.hatenadiary.com/entry/2019/11/14/001443
+
+
 ## kubernetesのインストールをしておく
 macでしたらdockerアイコンの右クリック→preference→kubernetesでチェックを入れればインストールが始まります。
 
